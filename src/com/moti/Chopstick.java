@@ -1,21 +1,35 @@
 package com.moti;
 
+/**
+ * Represent a chopstick
+ * object for the philosophers to pick up
+ */
 public class Chopstick {
-
     private int _num;
-    private boolean _is_picked_up;
+    private boolean _isPickedUp;
 
+    /**
+     * Initialize chopstick
+     * @param num chopstick assigned number
+     */
     public Chopstick(int num) {
         _num = num;
-        _is_picked_up = false;
+        _isPickedUp = false;
     }
 
-    public int get_num() {
+    /**
+     * Get chopstick assigned number
+     * @return chopstick assigned number
+     */
+    public int getNum() {
         return _num;
     }
 
-    public synchronized void pick_up() {
-        while (_is_picked_up) {
+    /**
+     * Pick up the chopstick when it freed
+     */
+    public synchronized void pickUp() {
+        while (_isPickedUp) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -23,11 +37,14 @@ public class Chopstick {
             }
         }
 
-        _is_picked_up = true;
+        _isPickedUp = true;
     }
 
-    public synchronized void put_down() {
-        _is_picked_up = false;
+    /**
+     * Put down the chopstick
+     */
+    public synchronized void putDown() {
+        _isPickedUp = false;
         notify();
     }
 }
