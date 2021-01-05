@@ -1,5 +1,3 @@
-package com.moti;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,9 +10,9 @@ public class PhilosophersProblem extends JFrame {
     private final int WINDOW_HEIGHT = 600;
     private final int PICTURE_EDGE_SIZE = 100;
     private final Color TABLE_COLOR = new Color(102, 51, 0);
-    private JPanel _table;
-    private Chopstick[] _chopsticks;
-    private Philosopher[] _philosophers;
+    private JPanel table;
+    private Chopstick[] chopsticks;
+    private Philosopher[] philosophers;
 
     /**
      * Initialize window
@@ -25,10 +23,10 @@ public class PhilosophersProblem extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Initialize philosophers
-        _initPhilosophers();
+        initPhilosophers();
 
         // Create table panel
-        _table = new JPanel() {
+        table = new JPanel() {
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
@@ -36,24 +34,24 @@ public class PhilosophersProblem extends JFrame {
 
                 int xCenter = PhilosophersProblem.this.getWidth() / 2;
                 int yCenter = PhilosophersProblem.this.getHeight() / 2;
-                int radius = _getTableRadius();
+                int radius = getTableRadius();
 
                 g.fillOval(xCenter - radius, yCenter - radius, 2 * radius, 2 * radius);
 
                 // Put philosophers around the table
                 for (int i = 0; i < PHILOSOPHERS_COUNT; ++i) {
-                    Point philosopherPoint = _getPhilosopherCoordinate(i);
-                    _philosophers[i].setBounds(philosopherPoint.x, philosopherPoint.y, PICTURE_EDGE_SIZE, PICTURE_EDGE_SIZE);
+                    Point philosopherPoint = getPhilosopherCoordinate(i);
+                    philosophers[i].setBounds(philosopherPoint.x, philosopherPoint.y, PICTURE_EDGE_SIZE, PICTURE_EDGE_SIZE);
                 }
 
             }
         };
 
-        add(_table);
+        add(table);
 
         // start philosophers
         for (int i = 0; i < PHILOSOPHERS_COUNT; ++i) {
-            (new Thread(_philosophers[i])).start();
+            (new Thread(philosophers[i])).start();
         }
     }
 
@@ -61,7 +59,7 @@ public class PhilosophersProblem extends JFrame {
      * Get table radius by frame size
      * @return table radius
      */
-    private int _getTableRadius() {
+    private int getTableRadius() {
         int minCoordinate = Math.min(getWidth(), getHeight()) / 2;
 
         return 4 * minCoordinate / 6;
@@ -75,10 +73,10 @@ public class PhilosophersProblem extends JFrame {
      * @param philosopherIndex philosopher index
      * @return philosopher calculated coordinate
      */
-    private Point _getPhilosopherCoordinate(int philosopherIndex) {
+    private Point getPhilosopherCoordinate(int philosopherIndex) {
         int xCenter = getWidth() / 2;
         int yCenter = getHeight() / 2;
-        int radius = _getTableRadius();
+        int radius = getTableRadius();
         double angle = 2 * Math.PI * philosopherIndex / PHILOSOPHERS_COUNT;
 
         // x = xCenter + r * cos(angle)
@@ -93,34 +91,34 @@ public class PhilosophersProblem extends JFrame {
     /**
      * Initialize philosophers with their chopsticks
      */
-    private void _initPhilosophers() {
-        _chopsticks = new Chopstick[PHILOSOPHERS_COUNT];
-        _philosophers = new Philosopher[PHILOSOPHERS_COUNT];
+    private void initPhilosophers() {
+        chopsticks = new Chopstick[PHILOSOPHERS_COUNT];
+        philosophers = new Philosopher[PHILOSOPHERS_COUNT];
 
         // Initialize chopsticks
-        for (int i = 0; i < _chopsticks.length; ++i) {
-            _chopsticks[i] = new Chopstick(i % 2);
+        for (int i = 0; i < chopsticks.length; ++i) {
+            chopsticks[i] = new Chopstick(i % 2);
         }
 
         // Initialize and run philosophers
-        for (int i = 0; i < _philosophers.length; ++i) {
+        for (int i = 0; i < philosophers.length; ++i) {
             // Get first and second chopsticks for the philosopher
-            Chopstick first = _chopsticks[i];
-            Chopstick second = _chopsticks[(i + 1) % _chopsticks.length];
+            Chopstick first = chopsticks[i];
+            Chopstick second = chopsticks[(i + 1) % chopsticks.length];
             if (first.getNum() > second.getNum()) {
-                first = _chopsticks[(i + 1) % _chopsticks.length];
-                second = _chopsticks[i];
+                first = chopsticks[(i + 1) % chopsticks.length];
+                second = chopsticks[i];
             }
 
             // Run the philosopher
-            _philosophers[i] = new Philosopher(i, first, second);
+            philosophers[i] = new Philosopher(i, first, second);
 
             // Put philosopher around the table
-            Point philosopherPoint = _getPhilosopherCoordinate(i);
+            Point philosopherPoint = getPhilosopherCoordinate(i);
             int x = (int) philosopherPoint.getX();
             int y = (int) philosopherPoint.getY();
-            _philosophers[i].setBounds(x, y, PICTURE_EDGE_SIZE, PICTURE_EDGE_SIZE);
-            add(_philosophers[i]);
+            philosophers[i].setBounds(x, y, PICTURE_EDGE_SIZE, PICTURE_EDGE_SIZE);
+            add(philosophers[i]);
         }
     }
 }

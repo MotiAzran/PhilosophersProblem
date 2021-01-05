@@ -1,7 +1,6 @@
 /*
  * Moti Azran
  */
-package com.moti;
 
 /**
  * Main class program
